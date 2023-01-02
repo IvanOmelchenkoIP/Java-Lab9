@@ -12,10 +12,10 @@ import lab9.task_9_1.transfer.TransferManager;
 public class Main {
 
 	public static void main(String[] args) {		
-		final int ACCOUNTS_AMOUNT = 50;
-		final int ACCOUNT_MAX_INIT_BALANCE = 500;
-		final int MAX_TRANSACTION = 250;
-		final int THREAD_AMOUNT = 10000;
+		final int ACCOUNTS_AMOUNT = 250;
+		final int ACCOUNT_MAX_INIT_BALANCE = 10000000;
+		final int MAX_TRANSACTION = 500000;
+		final int THREAD_AMOUNT = 5000;
 		
 		Random random = new Random();
 		
@@ -24,15 +24,20 @@ public class Main {
 		for (int i = 0; i < ACCOUNTS_AMOUNT; i++) {
 			accounts.add(accountsManager.createAccount(random.nextInt(ACCOUNT_MAX_INIT_BALANCE)));
 		}
-		int initTotalBalance = accountsManager.getTotalAccountBalance();		
+		int initTotalBalance = accountsManager.getTotalAccountBalance();	
+		//int account1 = accounts.get(1).getBalance();
 		
 		CountDownLatch barrier = new CountDownLatch(THREAD_AMOUNT);
 		TransferManager transferManager = new TransferManager(accounts, accountsManager, barrier);
+		ArrayList<Thread> threads = new ArrayList<Thread>();
 		for (int i = 0; i < THREAD_AMOUNT; i++) {
 			Account from = accounts.get(random.nextInt(ACCOUNTS_AMOUNT));
 			Account to = accounts.get(random.nextInt(ACCOUNTS_AMOUNT));
 			int amount = random.nextInt(MAX_TRANSACTION);
-			new Thread(transferManager.newTransfer(from, to, amount)).start();
+			threads.add(new Thread(transferManager.newTransfer(from, to, amount)));
+		}
+		for (Thread thread : threads) {
+			thread.start();
 		}
 		try {
 			barrier.await();
@@ -40,6 +45,10 @@ public class Main {
 		
 			System.out.println("Initial balance: " + initTotalBalance);
 			System.out.println("Balance after transactions: " + transferTotalBalance);
+			System.out.println("Balances are equal: " + (initTotalBalance == transferTotalBalance));
+			
+			//System.out.println("Initial account 1 state: " + account1);
+			//System.out.println("Transferred account 1 state: " + accounts.get(1).getBalance());
 		} catch (InterruptedException ex) {
 			System.out.println(ex.getMessage());
 		}

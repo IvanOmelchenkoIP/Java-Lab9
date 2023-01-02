@@ -19,9 +19,15 @@ public class BankAccountsManager {
 		return account;
 	}
 	
-	public void tryConcurrentTransfer(Account from, Account to, int amount) { 
-		if (!accountList.contains(from) || !accountList.contains(from)) return;
-		if (amount > from.getBalance()) return;
+	public void tryConcurrentTransfer(Account from, Account to, int amount) throws InterruptedException, Exception { 
+		if (!accountList.contains(from) || !accountList.contains(from)) {
+			throw new Exception("One of specified accounts does not belong to the bank");
+		}
+		//System.out.println("thread " + Thread.currentThread().getName() + " before 'from': " + from.getBalance());
+		//System.out.println("thread " + Thread.currentThread().getName() + " before 'to': " + to.getBalance());
+		if (amount > from.getBalance()) {
+			throw new Exception("Not enough money on the from account to transfer specified amount");
+		}
 		
 		Lock fromLock = from.acquireAccountLock();
 		Lock toLock = to.acquireAccountLock();
@@ -29,6 +35,8 @@ public class BankAccountsManager {
 		toLock.lock();
 		try {
 			bank.transfer(from, to, amount);
+			//System.out.println("thread " + Thread.currentThread().getName() + " after 'from': " + from.getBalance());
+			//WSystem.out.println("thread " + Thread.currentThread().getName() + " after 'to': " + to.getBalance());
 		} finally {
 			fromLock.unlock();
 			toLock.unlock();

@@ -20,11 +20,17 @@ public class TransferManager {
 
 	public Runnable newTransfer(Account from, Account to, int amount) {
 		return new Runnable() {
-			
+
 			@Override
 			public void run() {
-				accountsManager.tryConcurrentTransfer(from, to, amount);
-				barrier.countDown();
+				try {
+					accountsManager.tryConcurrentTransfer(from, to, amount);
+					System.out.println("Transfer in thread " + Thread.currentThread().getName() + " successful");
+				} catch (Exception ex) {
+					System.out.println("Transfer in thread " + Thread.currentThread().getName() + " unsuccessful: " + ex.getMessage());
+				} finally {
+					barrier.countDown();
+				}
 			}
 		};
 	}
