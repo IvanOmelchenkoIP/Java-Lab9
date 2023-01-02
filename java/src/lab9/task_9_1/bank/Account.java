@@ -9,10 +9,7 @@ public class Account {
 	}
 	
 	public void withdraw(int amount) {
-		int changed = balance - amount;
-		if (changed >= 0) {
-			balance -= amount;
-		}
+		balance -= amount;
 	}
 	
 	public void deposit(int amount) {
