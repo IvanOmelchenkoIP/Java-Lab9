@@ -35,4 +35,8 @@ public class Account {
 			readLock.unlock();
 		}
 	}
+	
+	public WriteLock acquireAccountLock() {
+		return writeLock;
+	}
 }

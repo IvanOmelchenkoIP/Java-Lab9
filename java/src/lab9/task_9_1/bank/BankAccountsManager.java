@@ -1,6 +1,7 @@
 package lab9.task_9_1.bank;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
 
 public class BankAccountsManager {
 	
@@ -18,10 +19,19 @@ public class BankAccountsManager {
 		return account;
 	}
 	
-	public void tryTransfer(Account from, Account to, int amount) { 
+	public void tryConcurrentTransfer(Account from, Account to, int amount) { 
 		if (!accountList.contains(from) || !accountList.contains(from)) return;
-		if (amount <= from.getBalance()) {
+		if (amount > from.getBalance()) return;
+		
+		Lock fromLock = from.acquireAccountLock();
+		Lock toLock = to.acquireAccountLock();
+		fromLock.lock();
+		toLock.lock();
+		try {
 			bank.transfer(from, to, amount);
+		} finally {
+			fromLock.unlock();
+			toLock.unlock();
 		}
 	}
 	
