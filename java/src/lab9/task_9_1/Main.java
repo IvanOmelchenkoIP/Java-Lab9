@@ -21,9 +21,9 @@ public class Main {
 		
 		BankAccountsManager manager = new BankAccountsManager(new Bank());
 		ArrayList<Account> accounts = new ArrayList<Account>();
-		for (int i = 0; i < ACCOUNTS_AMOUNT; i++) {
+		/*for (int i = 0; i < ACCOUNTS_AMOUNT; i++) {
 			accounts.add(manager.createAccount(random.nextInt(ACCOUNT_MAX_INIT_BALANCE)));
-		}
+		}*/
 		
 		int initTotalBalance = manager.getTotalAccountBalance();		
 		System.out.println(initTotalBalance);
