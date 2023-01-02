@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class BankAccountsManager {
 
-	private final static int bankID = 0;
 	private int bankTotalMoney = 0;
 	ArrayList<Account> accountList;
 	
@@ -12,7 +11,12 @@ public class BankAccountsManager {
 		accountList = new ArrayList<Account>();
 	}
 	
-	public Account createAccount(int initBalance) { throw new RuntimeException("NotImplemented"); }
+	public Account createAccount(int initBalance) { 
+		bankTotalMoney += initBalance;
+		return new Account(initBalance);
+	}
 	
-	public void tryTransfer(Account from, Account to, int amount) { }
+	public void tryTransfer(Account from, Account to, int amount) { 
+		
+	}
 }

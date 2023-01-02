@@ -2,24 +2,24 @@ package lab9.task_9_1.bank;
 
 public class Account {
 
-	private int money;
+	private int balance;
 	
-	public Account(int money) {
-		this.money = money;
+	public Account(int initBalance) {
+		this.balance = initBalance;
 	}
 	
 	public void withdraw(int amount) {
-		int changed = money - amount;
+		int changed = balance - amount;
 		if (changed >= 0) {
-			money -= amount;
+			balance -= amount;
 		}
 	}
 	
 	public void deposit(int amount) {
-		money += amount;
+		balance += amount;
 	}
 	
-	public int getMoney() {
-		return money;
+	public int getBalance() {
+		return balance;
 	}
 }
