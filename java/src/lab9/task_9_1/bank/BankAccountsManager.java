@@ -3,23 +3,31 @@ package lab9.task_9_1.bank;
 import java.util.ArrayList;
 
 public class BankAccountsManager {
-
-	private int bankTotalMoney = 0;
-	ArrayList<Account> accountList;
+	
 	Bank bank;
+	ArrayList<Account> accountList;
 	
 	public BankAccountsManager(Bank bank) {
-		accountList = new ArrayList<Account>();
+		this.bank = bank;
+		this.accountList = new ArrayList<Account>();
 	}
 	
 	public Account createAccount(int initBalance) { 
-		bankTotalMoney += initBalance;
 		return new Account(initBalance);
 	}
 	
 	public void tryTransfer(Account from, Account to, int amount) { 
+		if (!accountList.contains(from) || !accountList.contains(from)) return;
 		if (amount <= from.getBalance()) {
 			bank.transfer(from, to, amount);
 		}
+	}
+	
+	public int getTotalAccountBalance() {
+		int totalAccountBalance = 0;
+		for (Account account : accountList) {
+			totalAccountBalance += account.getBalance();
+		}
+		return totalAccountBalance;
 	}
 }
