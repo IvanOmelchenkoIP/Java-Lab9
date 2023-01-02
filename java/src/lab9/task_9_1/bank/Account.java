@@ -4,7 +4,7 @@ public class Account {
 
 	private int money;
 	
-	Account(int money) {
+	public Account(int money) {
 		this.money = money;
 	}
 	
@@ -17,5 +17,9 @@ public class Account {
 	
 	public void deposit(int amount) {
 		money += amount;
+	}
+	
+	public int getMoney() {
+		return money;
 	}
 }
