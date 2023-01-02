@@ -13,7 +13,9 @@ public class BankAccountsManager {
 	}
 	
 	public Account createAccount(int initBalance) { 
-		return new Account(initBalance);
+		Account account = new Account(initBalance);
+		accountList.add(account);
+		return account;
 	}
 	
 	public void tryTransfer(Account from, Account to, int amount) { 
