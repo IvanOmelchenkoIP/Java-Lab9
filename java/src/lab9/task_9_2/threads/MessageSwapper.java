@@ -14,8 +14,15 @@ public class MessageSwapper implements Runnable {
 
 	@Override
 	public void run() {
-		String message = generatedBuffer.take();
-		String swappedMessage = "Потік №" + Thread.currentThread().getName() + " переклав повідомлення: '" + message + "'";
-		swapperBuffer.add(swappedMessage);
+		while(true) {
+			try {
+				String message = generatedBuffer.take();
+				String swappedMessage = "Потік №" + Thread.currentThread().getName() + " переклав повідомлення: '" + message + "'";
+				swapperBuffer.add(swappedMessage);
+			} catch (InterruptedException ex) {
+				System.out.println(ex.getMessage());
+				continue;
+			}
+		}
 	}
 }

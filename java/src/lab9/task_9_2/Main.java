@@ -32,7 +32,12 @@ public class Main {
 		}
 		
 		for (int i = 0; i < MESSAGES_PRINTED; i++) {
-			System.out.println(swapperBuffer.take());
+			try {
+				System.out.println("Трансфер " + i + ": " + swapperBuffer.take());
+			} catch (InterruptedException ex) {
+				System.out.println(ex.getMessage());
+			}
 		}
+		System.out.println("Вибір повідомлень завершено...");
 	}
 }
