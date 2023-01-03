@@ -106,11 +106,9 @@ public class ConcurrentCircularBuffer {
 		} finally {
 			freeLock.unlock();
 		}
-	}*/
+	}*/	
 	
-	
-	
-	final int size;
+	final int bufferSize;
 	int placesTaken = 0;
 	
 	String[] elements;
@@ -122,9 +120,9 @@ public class ConcurrentCircularBuffer {
 	private final WriteLock writeLock;
 	private final Condition dataAvailable;
 	
-	public ConcurrentCircularBuffer(int size) {
-		this.size = size;
-		this.elements = new String[size];
+	public ConcurrentCircularBuffer(int bufferSize) {
+		this.bufferSize = bufferSize;
+		this.elements = new String[bufferSize];
 		
 		this.bufferLock = new ReentrantReadWriteLock();
 		this.readLock = bufferLock.readLock();
@@ -137,24 +135,15 @@ public class ConcurrentCircularBuffer {
 	}
 	
 	private boolean bufferFull() {
-		return placesTaken == size;
+		return placesTaken == bufferSize;
 	}
-	
-	private int updateIndex(int index) {
-		index += 1;
-		if (index >= size) {
-			index = 0;
-		}
-		return index;
-	}
-	
 	
 	private void awaitDataAvailable() throws InterruptedException {
-		if (readIndex == writeIndex) {
+		if (readIndex == writeIndex || elements[readIndex % bufferSize] == null) {
 			readLock.unlock();
 			writeLock.lock();
 			try {
-				while (readIndex == writeIndex) {
+				while (readIndex == writeIndex || elements[readIndex] == null) {
 					dataAvailable.await();
 				}
 				readLock.lock();
@@ -167,8 +156,8 @@ public class ConcurrentCircularBuffer {
 	public void put(String message) throws InterruptedException {
 		writeLock.lock();
 		try {
-			writeIndex = updateIndex(writeIndex);
-			elements[writeIndex] = message;
+			++writeIndex;
+			elements[writeIndex % bufferSize] = message;
 			placesTaken += 1;
 			if (writeIndex == readIndex) {
 				dataAvailable.signalAll();
@@ -181,10 +170,10 @@ public class ConcurrentCircularBuffer {
 	public String take() throws InterruptedException {
 		readLock.lock();
 		try {
-			readIndex = updateIndex(readIndex);
+			++readIndex;
 			awaitDataAvailable();
 			placesTaken -= 1;
-			return elements[readIndex];
+			return elements[readIndex % bufferSize];
 		} finally {
 			readLock.unlock();
 		}

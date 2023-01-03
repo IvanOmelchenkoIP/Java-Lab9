@@ -6,7 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import lab9.task_9_1.bank.Account;
 import lab9.task_9_1.bank.BankAccountsManager;
 
-public class TransferManager {
+public class TransferManager{
 
 	ArrayList<Account> accounts;
 	BankAccountsManager accountsManager;
