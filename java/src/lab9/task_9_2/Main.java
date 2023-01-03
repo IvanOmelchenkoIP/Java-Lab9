@@ -14,7 +14,6 @@ public class Main {
 		
 		ConcurrentCircularBuffer generatedBuffer = new ConcurrentCircularBuffer(50);
 		ConcurrentCircularBuffer swapperBuffer = new ConcurrentCircularBuffer(50);
-
 		
 		for (int i = 0; i < MESSAGES_PRINTED; i++) {
 		}

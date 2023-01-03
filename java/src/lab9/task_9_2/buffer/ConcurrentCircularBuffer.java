@@ -7,4 +7,12 @@ public class ConcurrentCircularBuffer {
 	public ConcurrentCircularBuffer(int elements) {
 		this.elements = elements;
 	}
+	
+	public void add(String message) {
+		
+	}
+	
+	public String take() {
+		return null;
+	}
 }
