@@ -33,7 +33,7 @@ public class Main {
 		
 		for (int i = 0; i < MESSAGES_PRINTED; i++) {
 			try {
-				System.out.println("Трансфер " + i + ". " + swapperBuffer.read());
+				System.out.println("Трансфер " + i + ". " + swapperBuffer.take());
 			} catch (InterruptedException ex) {
 				System.out.println(ex.getMessage());
 			}
