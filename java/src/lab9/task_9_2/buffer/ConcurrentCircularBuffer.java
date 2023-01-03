@@ -4,7 +4,7 @@ public class ConcurrentCircularBuffer {
 	
 	final int elements;
 	
-	ConcurrentCircularBuffer(int elements) {
+	public ConcurrentCircularBuffer(int elements) {
 		this.elements = elements;
 	}
 }
