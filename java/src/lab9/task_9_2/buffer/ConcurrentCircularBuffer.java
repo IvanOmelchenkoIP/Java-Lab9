@@ -12,13 +12,12 @@ public class ConcurrentCircularBuffer {
 	String[] elements;
 	volatile int writeIndex = -1;
 	volatile int readIndex = 0;
-	
-	private boolean bufferFilled = false;
-	
+		
 	private ReentrantReadWriteLock bufferLock;
 	private ReadLock readLock;
 	private WriteLock writeLock;
 	private Condition dataAvailable;
+	
 	public ConcurrentCircularBuffer(int size) {
 		this.size = size;
 		this.elements = new String[size];
@@ -29,15 +28,35 @@ public class ConcurrentCircularBuffer {
 		this.dataAvailable = writeLock.newCondition();
 	}
 	
-	public void add(String message) {
+	private int updateIndex(int index) {
+		index += 1;
+		if (index >= size) {
+			index = 0;
+		}
+		return index;
+	}
+	
+	private void awaitData() throws InterruptedException {
+		if (elements[readIndex] == null) {
+			readLock.unlock();
+			writeLock.lock();
+			try {
+				while (elements[readIndex] == null) {
+					dataAvailable.await();
+				}
+				readLock.lock();
+			} finally {
+				writeLock.unlock();
+			}
+		}
+	}
+	
+	public void put(String message) {
 		writeLock.lock();
 		try {
-			writeIndex += 1;
-			if (writeIndex >= size) {
-				writeIndex = 0;
-			}
+			writeIndex = updateIndex(writeIndex);
 			elements[writeIndex] = message;
-			if (!bufferFilled && writeIndex == readIndex) {
+			if (writeIndex == readIndex) {
 				dataAvailable.signalAll();
 			}
 		} finally {
@@ -45,25 +64,11 @@ public class ConcurrentCircularBuffer {
 		}
 	}
 	
-	public String take() throws InterruptedException {
+	public String read() throws InterruptedException {
 		readLock.lock();
 		try {
-			readIndex += 1;
-			if (readIndex >= size) {
-				readIndex = 0;
-			}
-			if (elements[readIndex] == null) {
-				readLock.unlock();
-				writeLock.lock();
-				try {
-					while (elements[readIndex] == null) {
-						dataAvailable.await();
-					}
-					readLock.lock();
-				} finally {
-					writeLock.unlock();
-				}
-			}
+			readIndex = updateIndex(readIndex);
+			awaitData();
 			return elements[readIndex];
 		} finally {
 			readLock.unlock();

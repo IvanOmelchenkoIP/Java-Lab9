@@ -15,7 +15,7 @@ public class MessageGenerator implements Runnable {
 	public void run() {
 		while (true) {
 			String message = "Потік №" + Thread.currentThread().getName() + " згенерував повідомлення " + msgID++;
-			generatedBuffer.add(message);
+			generatedBuffer.put(message);
 		}
 	}
 }
