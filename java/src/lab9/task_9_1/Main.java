@@ -25,7 +25,6 @@ public class Main {
 			accounts.add(accountsManager.createAccount(random.nextInt(ACCOUNT_MAX_INIT_BALANCE)));
 		}
 		int initTotalBalance = accountsManager.getTotalAccountBalance();	
-		//int account1 = accounts.get(1).getBalance();
 		
 		CountDownLatch barrier = new CountDownLatch(THREAD_AMOUNT);
 		TransferManager transferManager = new TransferManager(accounts, accountsManager, barrier);
@@ -46,9 +45,6 @@ public class Main {
 			System.out.println("Initial balance: " + initTotalBalance);
 			System.out.println("Balance after transactions: " + transferTotalBalance);
 			System.out.println("Balances are equal: " + (initTotalBalance == transferTotalBalance));
-			
-			//System.out.println("Initial account 1 state: " + account1);
-			//System.out.println("Transferred account 1 state: " + accounts.get(1).getBalance());
 		} catch (InterruptedException ex) {
 			System.out.println(ex.getMessage());
 		}
