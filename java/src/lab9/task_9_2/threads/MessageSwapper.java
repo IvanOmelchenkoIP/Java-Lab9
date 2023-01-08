@@ -21,7 +21,6 @@ public class MessageSwapper implements Runnable {
 				swapperBuffer.put(swappedMessage);
 			} catch (InterruptedException ex) {
 				System.out.println(ex.getMessage());
-				continue;
 			}
 		}
 	}
