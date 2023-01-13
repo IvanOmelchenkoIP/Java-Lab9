@@ -23,24 +23,10 @@ public class BankAccountsManager {
 		if (!accountList.contains(from) || !accountList.contains(from)) {
 			throw new Exception("One of specified accounts does not belong to the bank");
 		}
-		//System.out.println("thread " + Thread.currentThread().getName() + " before 'from': " + from.getBalance());
-		//System.out.println("thread " + Thread.currentThread().getName() + " before 'to': " + to.getBalance());
 		if (amount > from.getBalance()) {
 			throw new Exception("Not enough money on the from account to transfer specified amount");
 		}
-		
-		Lock fromLock = from.acquireAccountLock();
-		Lock toLock = to.acquireAccountLock();
-		fromLock.lock();
-		toLock.lock();
-		try {
-			bank.transfer(from, to, amount);
-			//System.out.println("thread " + Thread.currentThread().getName() + " after 'from': " + from.getBalance());
-			//WSystem.out.println("thread " + Thread.currentThread().getName() + " after 'to': " + to.getBalance());
-		} finally {
-			fromLock.unlock();
-			toLock.unlock();
-		}
+		bank.transfer(from, to, amount);
 	}
 	
 	public int getTotalAccountBalance() {

@@ -33,11 +33,12 @@ public class Main {
 			Account from = accounts.get(random.nextInt(ACCOUNTS_AMOUNT));
 			Account to = accounts.get(random.nextInt(ACCOUNTS_AMOUNT));
 			int amount = random.nextInt(MAX_TRANSACTION);
-			threads.add(new Thread(transferManager.newTransfer(from, to, amount)));
+			//threads.add(new Thread(transferManager.newTransfer(from, to, amount)));
+			new Thread(transferManager.newTransfer(from, to, amount)).start();
 		}
-		for (Thread thread : threads) {
+		/*for (Thread thread : threads) {
 			thread.start();
-		}
+		}*/
 		try {
 			barrier.await();
 			int transferTotalBalance = accountsManager.getTotalAccountBalance();
